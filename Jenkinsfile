@@ -5,7 +5,7 @@ pipeline {
         SNYK_TOKEN = credentials('SNYK_TOKEN') 
         // Docker-in-Docker (DinD) connection details
         DOCKER_HOST = 'tcp://dind:2376'        
-        DOCKER_TLS_VERIFY=0
+        DOCKER_TLS_VERIFY='0'
     }
     stages {
         stage('Install Dependencies') {
