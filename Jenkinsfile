@@ -72,11 +72,18 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    def imageName = "xu524873/assignment2:${BUILD_NUMBER}"
-                    // 推送镜像到 Docker Hub
-                    sh "docker push ${imageName}"
+                    def image = "xu524873/assignment2:${BUILD_NUMBER}"
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        sh """
+                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                        docker push ${image}
+                        docker logout
+                        """
+                    }
                 }
             }
         }
+
+
     }
 }
