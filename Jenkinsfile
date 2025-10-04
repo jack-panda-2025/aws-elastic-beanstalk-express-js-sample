@@ -10,19 +10,17 @@ pipeline {
     }
     stages {
         stage('Install Dependencies') {
-            steps {
-                // Install Node.js dependencies inside Node 16 container in DinD
-                // Mount current workspace into container (-v)
-                // Set working directory inside container (-w)
-                sh '''
-                docker run --rm \
-                    -v $PWD:/app -w /app \
-                    -u $(id -u):$(id -g) \
-                    node:16 \
-                    npm install --save
-                '''
-            }
-        }
+    steps {
+        sh '''
+        docker run --rm \
+            -v ${WORKSPACE}:/app -w /app \
+            -u $(id -u):$(id -g) \
+            node:16 \
+            npm install --save
+        '''
+    }
+}
+
         stage('Run Security Scan') {
             steps {
                 // Run Snyk security vulnerability scan inside Node 16 container
