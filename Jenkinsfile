@@ -17,6 +17,7 @@ pipeline {
                 sh '''
                 docker run --rm \
                     -v $PWD:/app -w /app \
+                    -u $(id -u):$(id -g) \
                     node:16 \
                     npm install --save
                 '''
