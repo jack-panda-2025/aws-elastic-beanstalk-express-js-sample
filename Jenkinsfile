@@ -84,6 +84,27 @@ pipeline {
             }
         }
 
+    }
 
+    post {
+        always {
+            echo "✅ Build finished with status: ${currentBuild.currentResult}"
+
+            // 1️⃣ Archive build artifacts such as logs, test reports, and scan results
+            // These files will be stored under each build record for later review
+            archiveArtifacts artifacts: '**/npm-debug.log, **/snyk-report.json, **/test-results.xml', allowEmptyArchive: true
+
+            // 2️⃣ Configure build retention policy
+            // Keep only the latest 10 builds to prevent excessive log storage
+            buildDiscarder(logRotator(numToKeepStr: '10'))
+
+            // 3️⃣ Print useful build information to the console
+            echo "Build number: ${env.BUILD_NUMBER}, started by: ${env.BUILD_USER}"
+        }
+
+        failure {
+            // Executed only if the pipeline fails
+            echo "❌ Build failed! Check console logs for detailed errors."
+        }
     }
 }
